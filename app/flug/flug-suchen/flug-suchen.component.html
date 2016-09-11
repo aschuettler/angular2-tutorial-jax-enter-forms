@@ -1,0 +1,78 @@
+<h1>Flug suchen!</h1>
+<form #f="ngForm">
+
+    <div class="form-group">
+        <label>Von:</label>
+        <input
+                [(ngModel)]="von"
+                name="von"
+                class="form-control"
+                required
+                xort
+                ort="Graz,München,Hamburg,Frankfurt,Zürich,Wien"
+                ortAsync
+                minlength="3"
+                maxlength="30">
+</div>
+
+    <div *ngIf="!f?.controls?.von?.valid && !f?.controls?.von?.pending">
+        Es liegen Validierungsfehler für diese Eingabe vor.
+    </div>
+
+    <div *ngIf="f?.controls?.von?.hasError('required')">
+        Dieses Feld ist ein Pflichtfeld.
+    </div>
+
+    <div *ngIf="f?.controls?.von?.hasError('minlength')">
+        Erfassen Sie bitte min. 3 Zeichen.
+    </div>
+
+    <div *ngIf="f?.controls?.von?.hasError('maxlength')">
+        Erfassen Sie bitte max. 30 Zeichen.
+    </div>
+
+    <div *ngIf="f?.controls?.von?.hasError('ort')">
+        Dieser Flughafen existiert nicht.
+    </div>
+
+    <div *ngIf="f?.controls?.von?.hasError('ortAsync')">
+        Derzeit gibt es keine Flüge für diesen Flughafen! (Mögliche Werte: Graz, Hamburg)
+    </div>
+
+    <div *ngIf="f?.controls?.von?.pending">
+        <marquee>
+            Validierung wird durchgeführt!
+        </marquee>
+    </div>
+
+    <div *ngIf="!f?.controls?.von?.valid">
+        &nbsp;
+    </div>
+
+    <div class="form-group">
+        <label>Nach:</label>
+        <input [(ngModel)]="nach" name="nach" class="form-control">
+    </div>
+
+    <div class="form-group">
+        <button class="btn btn-primary"
+                (click)="suchen()" [disabled]="!von || !nach">
+            Suchen!
+        </button>
+    </div>
+
+    <table class="table table-striped">
+        <tr *ngFor="let flug of fluege" [class.active]="flug == selectedFlug">
+            <td>{{flug.id}}</td>
+            <td>{{flug.datum}}</td>
+            <td>{{flug.abflugort}}</td>
+            <td>{{flug.zielort}}</td>
+            <td><a (click)="select(flug)">Auswählen!</a></td>
+        </tr>
+    </table>
+
+</form>
+<pre>Warenkorb
+----------------------
+{{ selectedFlug | json }}
+</pre>
